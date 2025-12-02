@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Can 1 - Unit 3: My Family</title>
+    <style>
+        /* ============ التنسيقات العامة ============ */
+        :root {
+            --main-color: #e67e22; /* برتقالي للوحدة 3 */
+            --accent-color: #d35400;
+            --bg-color: #fdf2e9;
+            --text-color: #2c3e50;
+            --success: #27ae60;
+            --error: #c0392b;
+            --slot-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            user-select: none;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* ============ الرأس والقائمة ============ */
+        .header {
+            background-color: var(--main-color); color: white;
+            padding: 25px; border-radius: 20px; margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 5px solid #d35400;
+        }
+        .header h1 { margin: 0; font-size: 2.5em; }
+        
+        .nav-container {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px;
+        }
+        .btn-nav {
+            background: white; color: var(--main-color); border: 2px solid var(--main-color);
+            padding: 12px 25px; border-radius: 30px; cursor: pointer;
+            font-size: 1.1em; font-weight: bold; transition: 0.3s;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .btn-nav:hover, .btn-nav.active {
+            background: var(--main-color); color: white; transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        /* ============ الأقسام ============ */
+        .section { display: none; animation: slideIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--dark); border-bottom: 3px solid var(--accent-color); display: inline-block; padding-bottom: 5px; margin-bottom: 25px; }
+
+        /* ============ 1. Talk Time (Introductions) ============ */
+        .chat-container {
+            display: flex; flex-direction: column; gap: 20px; max-width: 600px; margin: 0 auto;
+        }
+        .chat-bubble {
+            background: white; padding: 15px 25px; border-radius: 20px;
+            position: relative; display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1); font-size: 1.2em;
+        }
+        .chat-left { align-self: flex-start; border-bottom-left-radius: 2px; background: #fff3e0; }
+        .chat-right { align-self: flex-end; flex-direction: row-reverse; border-bottom-right-radius: 2px; background: #e3f2fd; }
+        .character-icon { font-size: 2em; }
+
+        .slot-inline {
+            display: inline-flex; min-width: 150px; height: 45px;
+            background-color: white; border: 2px dashed #e67e22; border-radius: 10px;
+            align-items: center; justify-content: center; margin: 0 5px;
+            transition: 0.3s; vertical-align: middle; font-size: 0.9em;
+        }
+        .slot-inline.correct { background-color: #d5f5e3; border-color: var(--success); border-style: solid; }
+
+        /* ============ 2. Rhythms (5 Little Monkeys) ============ */
+        .monkeys-container {
+            background: white; padding: 20px; border-radius: 20px; margin: 0 auto; max-width: 700px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: left; direction: ltr; font-size: 1.3em; line-height: 2;
+        }
+        .monkey-img { width: 100px; float: right; margin: 10px; }
+
+        /* ============ 3. Words (Family Tree) ============ */
+        .family-tree {
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+            background: white; padding: 20px; border-radius: 20px; margin: 0 auto; max-width: 700px;
+        }
+        .tree-row { display: flex; justify-content: center; gap: 40px; }
+        .family-card {
+            width: 140px; display: flex; flex-direction: column; align-items: center;
+            background: #f9f9f9; padding: 10px; border-radius: 15px; border: 2px solid #eee;
+        }
+        .family-icon { font-size: 4em; margin-bottom: 10px; }
+        .family-slot {
+            width: 100%; height: 40px; border: 2px dashed #ccc; border-radius: 8px;
+            background: white; display: flex; align-items: center; justify-content: center;
+        }
+        .family-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ 4. Phonics (Match Letter to Word) ============ */
+        .phonics-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .phonics-card {
+            background: white; padding: 15px; border-radius: 15px; width: 150px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center;
+        }
+        .phonics-img { font-size: 3.5em; margin-bottom: 5px; }
+        .phonics-word { font-size: 1.2em; font-weight: bold; color: #555; margin-bottom: 10px; letter-spacing: 2px; }
+        .phonics-slot { width: 50px; height: 50px; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold; }
+        .phonics-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ العناصر القابلة للسحب ============ */
+        .source-box {
+            background: white; padding: 20px; border-radius: 15px; min-height: 80px;
+            margin-top: 30px; border: 3px dashed #e67e22;
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
+        }
+
+        .draggable {
+            padding: 10px 20px; background-color: var(--main-color); color: white;
+            border-radius: 25px; font-weight: bold; cursor: grab; font-size: 1.1em;
+            box-shadow: 0 4px 0 #d35400; transition: 0.1s; z-index: 100;
+            pointer-events: auto !important;
+        }
+        .draggable:active { cursor: grabbing; transform: translateY(4px); box-shadow: none; }
+        .draggable.locked { cursor: default; background-color: var(--success); box-shadow: none; transform: none; }
+
+        /* ============ تحكم وأزرار ============ */
+        .controls { margin-top: 30px; }
+        .btn-reset {
+            background: var(--text-color); color: white; border: none; padding: 10px 30px;
+            border-radius: 10px; cursor: pointer; font-size: 1em;
+        }
+
+        /* مؤشر عدم التفاعل داخل السلوت */
+        .slot-inline *, .family-slot *, .phonics-slot * { pointer-events: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>We Can 1: Unit 3 (My Family) 👨‍👩‍👧‍👦</h1>
+        <p>Interactive Activities</p>
+    </div>
+
+    <div class="nav-container">
+        <button class="btn-nav active" onclick="showSection('talk-time')">🗣️ Introductions</button>
+        <button class="btn-nav" onclick="showSection('rhythms')">🐵 5 Monkeys</button>
+        <button class="btn-nav" onclick="showSection('words')">🌳 Family Tree</button>
+        <button class="btn-nav" onclick="showSection('phonics')">🔤 Phonics (A-E)</button>
+    </div>
+
+    <div id="talk-time" class="section active">
+        <h2>Talk Time: Introductions</h2>
+        <p>Complete the conversation.</p>
+
+        <div class="chat-container">
+            <div class="chat-bubble chat-left">
+                <div class="character-icon">👦</div>
+                <div>This is my <div class="slot-inline" data-ans="brother" ondrop="drop(event)" ondragover="allowDrop(event)"></div>, Jack.</div>
+            </div>
+            <div class="chat-bubble chat-right">
+                <div class="character-icon">👨</div>
+                <div><div class="slot-inline" data-ans="Nice to meet you" ondrop="drop(event)" ondragover="allowDrop(event)"></div>.</div>
+            </div>
+            <div class="chat-bubble chat-left">
+                <div class="character-icon">👦</div>
+                <div>Nice to meet you, <div class="slot-inline" data-ans="too" ondrop="drop(event)" ondragover="allowDrop(event)"></div>.</div>
+            </div>
+             <div class="chat-bubble chat-left">
+                <div class="character-icon">👧</div>
+                <div>This is my <div class="slot-inline" data-ans="friend" ondrop="drop(event)" ondragover="allowDrop(event)"></div>, Sarah.</div>
+            </div>
+        </div>
+
+        <div id="talk-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initTalkTime()">🔄 Reset</button></div>
+    </div>
+
+    <div id="rhythms" class="section">
+        <h2>Rhythms: Five Little Monkeys</h2>
+        <p>Fill in the missing words.</p>
+
+        <div class="monkeys-container">
+            <img src="https://em-content.zobj.net/source/microsoft-teams/337/monkey-face_1f435.png" class="monkey-img">
+            Five little <div class="slot-inline" data-ans="monkeys" ondrop="drop(event)" ondragover="allowDrop(event)"></div> jumping on the <div class="slot-inline" data-ans="bed" ondrop="drop(event)" ondragover="allowDrop(event)"></div>.<br>
+            One fell off and bumped his <div class="slot-inline" data-ans="head" ondrop="drop(event)" ondragover="allowDrop(event)"></div>.<br>
+            Mom called the <div class="slot-inline" data-ans="doctor" ondrop="drop(event)" ondragover="allowDrop(event)"></div> and the doctor said,<br>
+            "No more monkeys <div class="slot-inline" data-ans="jumping" ondrop="drop(event)" ondragover="allowDrop(event)"></div> on the bed!"
+        </div>
+
+        <div id="monkeys-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initMonkeys()">🔄 Reset</button></div>
+    </div>
+
+    <div id="words" class="section">
+        <h2>Words: Family Tree</h2>
+        <p>Label the family members.</p>
+        
+        <div class="family-tree">
+            <div class="tree-row">
+                <div class="family-card"><div class="family-icon">👴</div><div class="family-slot" data-ans="Grandpa" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+                <div class="family-card"><div class="family-icon">👵</div><div class="family-slot" data-ans="Grandma" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            </div>
+            <div class="tree-row">
+                <div class="family-card"><div class="family-icon">👨</div><div class="family-slot" data-ans="Dad" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+                <div class="family-card"><div class="family-icon">👩</div><div class="family-slot" data-ans="Mom" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            </div>
+            <div class="tree-row">
+                <div class="family-card"><div class="family-icon">👦</div><div class="family-slot" data-ans="Brother" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+                <div class="family-card"><div class="family-icon">👧</div><div class="family-slot" data-ans="Sister" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            </div>
+        </div>
+
+        <div id="family-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initFamily()">🔄 Reset</button></div>
+    </div>
+
+    <div id="phonics" class="section">
+        <h2>Phonics: Letters A - E</h2>
+        <p>Drag the missing letter to complete the word.</p>
+        
+        <div class="phonics-grid" id="phonics-grid-area"></div>
+
+        <div id="phonics-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initPhonics()">🔄 Reset</button></div>
+    </div>
+
+</div>
+
+<script>
+    // ============ AUDIO SYSTEM ============
+    const synth = window.speechSynthesis;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function speak(text) {
+        if (synth.speaking) synth.cancel();
+        let u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US'; synth.speak(u);
+    }
+
+    function playSound(isCorrect) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if (isCorrect) {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    // ============ DATA ============
+    // 1. Talk Time
+    const talkData = ["brother", "Nice to meet you", "too", "friend"];
+
+    // 2. Monkeys
+    const monkeyData = ["monkeys", "bed", "head", "doctor", "jumping"];
+
+    // 3. Family
+    const familyData = ["Grandpa", "Grandma", "Dad", "Mom", "Brother", "Sister"];
+
+    // 4. Phonics (A-E)
+    const phonicsData = [
+        {l:"A", w:"__PPLE", i:"🍎", full:"APPLE"},
+        {l:"B", w:"__EAR", i:"🐻", full:"BEAR"},
+        {l:"C", w:"__OW", i:"🐄", full:"COW"},
+        {l:"D", w:"__UCK", i:"🦆", full:"DUCK"},
+        {l:"E", w:"__GG", i:"🥚", full:"EGG"}
+    ];
+
+    // ============ INITIALIZATION ============
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        const btns = document.querySelectorAll('.btn-nav');
+        if(id === 'talk-time') { btns[0].classList.add('active'); initTalkTime(); }
+        if(id === 'rhythms') { btns[1].classList.add('active'); initMonkeys(); }
+        if(id === 'words') { btns[2].classList.add('active'); initFamily(); }
+        if(id === 'phonics') { btns[3].classList.add('active'); initPhonics(); }
+    }
+
+    // --- Talk Time ---
+    function initTalkTime() {
+        const src = document.getElementById('talk-source');
+        src.innerHTML = '';
+        document.querySelectorAll('#talk-time .slot-inline').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...talkData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Monkeys ---
+    function initMonkeys() {
+        const src = document.getElementById('monkeys-source');
+        src.innerHTML = '';
+        document.querySelectorAll('#rhythms .slot-inline').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...monkeyData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Family ---
+    function initFamily() {
+        const src = document.getElementById('family-source');
+        src.innerHTML = '';
+        document.querySelectorAll('.family-slot').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...familyData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Phonics ---
+    function initPhonics() {
+        const grid = document.getElementById('phonics-grid-area');
+        const src = document.getElementById('phonics-source');
+        grid.innerHTML = ''; src.innerHTML = '';
+
+        phonicsData.forEach(item => {
+            grid.innerHTML += `
+            <div class="phonics-card">
+                <div class="phonics-img">${item.i}</div>
+                <div class="phonics-word">${item.w}</div>
+                <div class="phonics-slot" data-ans="${item.l}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        let letters = phonicsData.map(x => x.l).sort(() => Math.random() - 0.5);
+        letters.forEach(l => createDraggable(l, src));
+    }
+
+    // ============ CORE LOGIC ============
+    function createDraggable(text, container) {
+        let d = document.createElement('div');
+        d.className = 'draggable'; d.draggable = true; d.innerText = text;
+        d.id = 'drag-' + text.replace(/\s/g, '') + '-' + Math.random().toString(36).substr(2, 5);
+        d.ondragstart = (ev) => { ev.dataTransfer.setData("text", ev.target.id); speak(text); };
+        d.onclick = () => speak(text);
+        container.appendChild(d);
+        return d;
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+
+    function drop(ev) {
+        ev.preventDefault();
+        let data = ev.dataTransfer.getData("text");
+        let item = document.getElementById(data);
+        let target = ev.target;
+
+        // Smart targeting
+        if (!target.classList.contains('slot-inline') && !target.classList.contains('family-slot') && !target.classList.contains('phonics-slot')) {
+            target = target.closest('.slot-inline') || target.closest('.family-slot') || target.closest('.phonics-slot');
+        }
+
+        if (target && item) {
+            if (target.children.length > 0) return; // Slot full
+
+            if (item.innerText === target.dataset.ans) {
+                target.appendChild(item);
+                target.classList.add('correct');
+                item.draggable = false; item.classList.add('locked');
+                playSound(true); speak("Correct!");
+            } else {
+                playSound(false);
+            }
+        }
+    }
+
+    function returnItem(ev) {
+        ev.preventDefault();
+        let data = ev.dataTransfer.getData("text");
+        let item = document.getElementById(data);
+        if (ev.target.classList.contains('source-box')) ev.target.appendChild(item);
+    }
+
+    // Start
+    initTalkTime();
+
+</script>
+
+</body>
+</html>

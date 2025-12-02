@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Can 1 - Unit 5: What's This?</title>
+    <style>
+        /* ============ التنسيقات العامة ============ */
+        :root {
+            --main-color: #9b59b6; /* بنفسجي */
+            --accent-color: #8e44ad;
+            --bg-color: #f5eef8;
+            --text-color: #2c3e50;
+            --success: #27ae60;
+            --error: #c0392b;
+            --slot-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            user-select: none;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* الرأس */
+        .header {
+            background-color: var(--main-color); color: white;
+            padding: 25px; border-radius: 20px; margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 5px solid #7d3c98;
+        }
+        .header h1 { margin: 0; font-size: 2.5em; }
+        
+        .nav-container {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px;
+        }
+        .btn-nav {
+            background: white; color: var(--main-color); border: 2px solid var(--main-color);
+            padding: 12px 25px; border-radius: 30px; cursor: pointer;
+            font-size: 1.1em; font-weight: bold; transition: 0.3s;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .btn-nav:hover, .btn-nav.active {
+            background: var(--main-color); color: white; transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        /* الأقسام */
+        .section { display: none; animation: slideIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--dark); border-bottom: 3px solid var(--accent-color); display: inline-block; padding-bottom: 5px; margin-bottom: 25px; }
+
+        /* ============ 1. Talk Time (This / That) ============ */
+        .this-that-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .tt-card {
+            width: 160px; background: white; border-radius: 15px; padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center;
+        }
+        .tt-img { font-size: 2.5em; margin: 10px 0; }
+        .tt-slot { width: 100%; height: 45px; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+        .tt-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ 2. Rhythms (Pronouns) ============ */
+        .pronoun-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .pronoun-card {
+            width: 150px; background: white; border-radius: 15px; padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center;
+            border: 1px solid #eee;
+        }
+        .pronoun-img { font-size: 3.5em; margin-bottom: 10px; }
+        .pronoun-slot { 
+            width: 100%; height: 45px; border: 2px dashed #9b59b6; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.1em; font-weight: bold;
+            background: #fafafa;
+        }
+        .pronoun-slot.correct { background: #d5f5e3; border-color: green; color: green; }
+
+        /* ============ 3. Fun Time (A / An) ============ */
+        .an-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .an-card {
+            width: 220px; background: white; border-radius: 15px; padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05); font-size: 1.2em;
+        }
+        .an-slot { display: inline-flex; width: 50px; height: 35px; border: 2px dashed #9b59b6; border-radius: 5px; vertical-align: middle; align-items: center; justify-content: center; font-size: 0.9em; }
+        .an-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ 4. Grammar (Verb to Be) ============ */
+        .be-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .be-card {
+            width: 250px; background: white; border-radius: 15px; padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); font-size: 1.1em; text-align: left;
+        }
+        .be-slot { display: inline-flex; width: 60px; height: 35px; border: 2px dashed #8e44ad; border-radius: 5px; vertical-align: middle; align-items: center; justify-content: center; }
+        .be-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ 5. Words (Colors) ============ */
+        .color-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .color-splat {
+            width: 120px; height: 120px; border-radius: 50%; border: 3px solid rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center; margin: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .color-slot {
+            width: 90px; height: 35px; background: rgba(255,255,255,0.8); border-radius: 5px;
+            display: flex; align-items: center; justify-content: center; font-size: 0.9em; font-weight: bold;
+            border: 1px dashed #555;
+        }
+        .color-slot.correct { border-style: solid; border-color: green; background: #d5f5e3; }
+
+        /* ============ 6. Phonics (A-J) ============ */
+        .phonics-row { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .phonics-box {
+            width: 140px; background: white; padding: 15px; border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center; box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .phonics-icon { font-size: 3em; margin-bottom: 5px; }
+        .phonics-text { font-size: 1.2em; font-weight: bold; color: #555; letter-spacing: 2px; margin-bottom: 10px;}
+        .phonics-slot { width: 50px; height: 50px; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold; }
+        .phonics-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ العناصر القابلة للسحب ============ */
+        .source-box {
+            background: white; padding: 20px; border-radius: 15px; min-height: 80px;
+            margin-top: 30px; border: 3px dashed #9b59b6;
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
+        }
+
+        .draggable {
+            padding: 10px 20px; background-color: var(--main-color); color: white;
+            border-radius: 25px; font-weight: bold; cursor: grab; font-size: 1.1em;
+            box-shadow: 0 4px 0 #8e44ad; transition: 0.1s; z-index: 100;
+            pointer-events: auto !important;
+        }
+        .draggable:active { cursor: grabbing; transform: translateY(4px); box-shadow: none; }
+        .draggable.locked { cursor: default; background-color: var(--success); box-shadow: none; transform: none; }
+
+        /* ============ تحكم وأزرار ============ */
+        .controls { margin-top: 30px; }
+        .btn-reset {
+            background: var(--text-color); color: white; border: none; padding: 10px 30px;
+            border-radius: 10px; cursor: pointer; font-size: 1em;
+        }
+
+        /* مؤشر عدم التفاعل داخل السلوت */
+        .tt-slot *, .an-slot *, .be-slot *, .color-slot *, .phonics-slot *, .pronoun-slot * { pointer-events: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>We Can 1: Unit 5 (What's This?) ❓</h1>
+        <p>Interactive Activities</p>
+    </div>
+
+    <div class="nav-container">
+        <button class="btn-nav active" onclick="showSection('talk-time')">👈 This / That</button>
+        <button class="btn-nav" onclick="showSection('rhythms')">👥 Pronouns</button>
+        <button class="btn-nav" onclick="showSection('fun-time')">🅰️ A / An</button>
+        <button class="btn-nav" onclick="showSection('grammar')">📝 Be (am/is/are)</button>
+        <button class="btn-nav" onclick="showSection('words')">🎨 Colors</button>
+        <button class="btn-nav" onclick="showSection('phonics')">🔤 Phonics</button>
+    </div>
+
+    <div id="talk-time" class="section active">
+        <h2>Talk Time: What's This? What's That?</h2>
+        <p>Drag <b>This</b> (near) or <b>That</b> (far) to the correct sentence.</p>
+
+        <div class="this-that-grid">
+            <div class="tt-card"><div class="tt-img">✏️👇</div><div class="tt-slot" data-ans="This" ondrop="drop(event)" ondragover="allowDrop(event)"></div> is a pencil.</div>
+            <div class="tt-card"><div class="tt-img">👉📓</div><div class="tt-slot" data-ans="That" ondrop="drop(event)" ondragover="allowDrop(event)"></div> is a notebook.</div>
+            <div class="tt-card"><div class="tt-img">🍎👇</div><div class="tt-slot" data-ans="This" ondrop="drop(event)" ondragover="allowDrop(event)"></div> is an apple.</div>
+            <div class="tt-card"><div class="tt-img">👉📖</div><div class="tt-slot" data-ans="That" ondrop="drop(event)" ondragover="allowDrop(event)"></div> is a book.</div>
+        </div>
+
+        <div id="talk-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initTalkTime()">🔄 Reset</button></div>
+    </div>
+
+    <div id="rhythms" class="section">
+        <h2>Rhythms: Pronouns (All)</h2>
+        <p>Match the pronoun to the correct picture.</p>
+
+        <div class="pronoun-grid" id="pronoun-grid-area">
+            </div>
+
+        <div id="pronoun-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initPronouns()">🔄 Reset</button></div>
+    </div>
+
+    <div id="fun-time" class="section">
+        <h2>Grammar: A or An?</h2>
+        <p>Use <b>an</b> before vowels (a, e, i, o, u). Use <b>a</b> for others.</p>
+
+        <div class="an-grid">
+            <div class="an-card">It's <div class="an-slot" data-ans="an" ondrop="drop(event)" ondragover="allowDrop(event)"></div> apple. 🍎</div>
+            <div class="an-card">It's <div class="an-slot" data-ans="a" ondrop="drop(event)" ondragover="allowDrop(event)"></div> book. 📖</div>
+            <div class="an-card">It's <div class="an-slot" data-ans="a" ondrop="drop(event)" ondragover="allowDrop(event)"></div> pen. 🖊️</div>
+            <div class="an-card">It's <div class="an-slot" data-ans="an" ondrop="drop(event)" ondragover="allowDrop(event)"></div> orange. 🍊</div>
+            <div class="an-card">It's <div class="an-slot" data-ans="a" ondrop="drop(event)" ondragover="allowDrop(event)"></div> pencil. ✏️</div>
+            <div class="an-card">It's <div class="an-slot" data-ans="an" ondrop="drop(event)" ondragover="allowDrop(event)"></div> eraser. 🧼</div>
+        </div>
+
+        <div id="an-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initAn()">🔄 Reset</button></div>
+    </div>
+
+    <div id="grammar" class="section">
+        <h2>Grammar: Verb To Be</h2>
+        <p>Drag <b>am</b>, <b>is</b>, or <b>are</b> to complete the sentences.</p>
+
+        <div class="be-grid">
+            <div class="be-card">I <div class="be-slot" data-ans="am" ondrop="drop(event)" ondragover="allowDrop(event)"></div> happy. 😊</div>
+            <div class="be-card">He <div class="be-slot" data-ans="is" ondrop="drop(event)" ondragover="allowDrop(event)"></div> ten. 🔟</div>
+            <div class="be-card">She <div class="be-slot" data-ans="is" ondrop="drop(event)" ondragover="allowDrop(event)"></div> a teacher. 👩‍🏫</div>
+            <div class="be-card">It <div class="be-slot" data-ans="is" ondrop="drop(event)" ondragover="allowDrop(event)"></div> a cat. 🐈</div>
+            <div class="be-card">They <div class="be-slot" data-ans="are" ondrop="drop(event)" ondragover="allowDrop(event)"></div> friends. 👫</div>
+            <div class="be-card">We <div class="be-slot" data-ans="are" ondrop="drop(event)" ondragover="allowDrop(event)"></div> students. 🎒</div>
+            <div class="be-card">You <div class="be-slot" data-ans="are" ondrop="drop(event)" ondragover="allowDrop(event)"></div> my friend. 🤝</div>
+        </div>
+
+        <div id="be-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initBe()">🔄 Reset</button></div>
+    </div>
+
+    <div id="words" class="section">
+        <h2>Words: What color is it?</h2>
+        <p>Drag the color word.</p>
+        
+        <div class="color-grid" id="color-grid-area"></div>
+
+        <div id="color-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initColors()">🔄 Reset</button></div>
+    </div>
+
+    <div id="phonics" class="section">
+        <h2>Phonics: Letters A - J</h2>
+        <p>Complete the words with the correct letter.</p>
+        
+        <div class="phonics-row" id="phonics-grid-area"></div>
+
+        <div id="phonics-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initPhonics()">🔄 Reset</button></div>
+    </div>
+
+</div>
+
+<script>
+    // ============ AUDIO SYSTEM ============
+    const synth = window.speechSynthesis;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function speak(text) {
+        if (synth.speaking) synth.cancel();
+        let u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; synth.speak(u);
+    }
+
+    function playSound(isCorrect) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if (isCorrect) {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    // ============ DATA ============
+    
+    // 1. Talk Time
+    const talkData = ["This", "That", "This", "That"];
+
+    // 2. Pronouns (Full Set)
+    const pronounData = [
+        {w:"I", i:"🙋‍♂️"}, 
+        {w:"You", i:"🫵"}, 
+        {w:"He", i:"👦"}, 
+        {w:"She", i:"👧"}, 
+        {w:"It", i:"🐈"}, 
+        {w:"We", i:"🧑‍🤝‍🧑"}, 
+        {w:"They", i:"👥"}
+    ];
+
+    // 3. A / An
+    const anData = ["a", "an", "a", "an", "a", "an"];
+
+    // 4. Verb to Be
+    const beData = ["am", "is", "is", "is", "are", "are", "are"];
+
+    // 5. Colors
+    const colorData = [
+        {w: "Purple", c: "#9b59b6"}, {w: "Pink", c: "#e91e63"}, {w: "Red", c: "#e74c3c"},
+        {w: "Green", c: "#2ecc71"}, {w: "Black", c: "#2c3e50"}, {w: "White", c: "#ffffff"},
+        {w: "Blue", c: "#3498db"}, {w: "Yellow", c: "#f1c40f"}, {w: "Orange", c: "#e67e22"}
+    ];
+
+    // 6. Phonics (A-J: 10 Words)
+    const phonicsData = [
+        {l:"A", w:"__PPLE", i:"🍎"}, {l:"B", w:"__EAR", i:"🐻"},
+        {l:"C", w:"__OW", i:"🐄"}, {l:"D", w:"__UCK", i:"🦆"},
+        {l:"E", w:"__GG", i:"🥚"}, {l:"F", w:"__ISH", i:"🐟"},
+        {l:"G", w:"__OAT", i:"🐐"}, {l:"H", w:"__AT", i:"🎩"},
+        {l:"I", w:"__NK", i:"✒️"}, {l:"J", w:"__ET", i:"✈️"}
+    ];
+
+    // ============ INITIALIZATION ============
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        const btns = document.querySelectorAll('.btn-nav');
+        if(id === 'talk-time') { btns[0].classList.add('active'); initTalkTime(); }
+        if(id === 'rhythms') { btns[1].classList.add('active'); initPronouns(); }
+        if(id === 'fun-time') { btns[2].classList.add('active'); initAn(); }
+        if(id === 'grammar') { btns[3].classList.add('active'); initBe(); }
+        if(id === 'words') { btns[4].classList.add('active'); initColors(); }
+        if(id === 'phonics') { btns[5].classList.add('active'); initPhonics(); }
+    }
+
+    // --- Talk Time ---
+    function initTalkTime() {
+        const src = document.getElementById('talk-source'); src.innerHTML = '';
+        document.querySelectorAll('#talk-time .tt-slot').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...talkData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Pronouns (Full Set) ---
+    function initPronouns() {
+        const grid = document.getElementById('pronoun-grid-area');
+        const src = document.getElementById('pronoun-source');
+        grid.innerHTML = ''; src.innerHTML = '';
+
+        pronounData.forEach(p => {
+            grid.innerHTML += `
+            <div class="pronoun-card">
+                <div class="pronoun-img">${p.i}</div>
+                <div class="pronoun-slot" data-ans="${p.w}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        let shuffled = [...pronounData].sort(() => Math.random() - 0.5);
+        shuffled.forEach(p => createDraggable(p.w, src));
+    }
+
+    // --- A / An ---
+    function initAn() {
+        const src = document.getElementById('an-source'); src.innerHTML = '';
+        document.querySelectorAll('.an-slot').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...anData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Verb to Be ---
+    function initBe() {
+        const src = document.getElementById('be-source'); src.innerHTML = '';
+        document.querySelectorAll('.be-slot').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...beData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Colors ---
+    function initColors() {
+        const grid = document.getElementById('color-grid-area');
+        const src = document.getElementById('color-source');
+        grid.innerHTML = ''; src.innerHTML = '';
+
+        colorData.forEach(c => {
+            grid.innerHTML += `
+            <div class="color-splat" style="background-color:${c.c};">
+                <div class="color-slot" data-ans="${c.w}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        let shuffled = [...colorData].sort(() => Math.random() - 0.5);
+        shuffled.forEach(c => createDraggable(c.w, src));
+    }
+
+    // --- Phonics ---
+    function initPhonics() {
+        const grid = document.getElementById('phonics-grid-area');
+        const src = document.getElementById('phonics-source');
+        grid.innerHTML = ''; src.innerHTML = '';
+
+        phonicsData.forEach(item => {
+            grid.innerHTML += `
+            <div class="phonics-box">
+                <div class="phonics-icon">${item.i}</div>
+                <div class="phonics-text">${item.w}</div>
+                <div class="phonics-slot" data-ans="${item.l}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        let letters = phonicsData.map(x => x.l).sort(() => Math.random() - 0.5);
+        letters.forEach(l => createDraggable(l, src));
+    }
+
+    // ============ CORE LOGIC ============
+    function createDraggable(text, container) {
+        let d = document.createElement('div');
+        d.className = 'draggable'; d.draggable = true; d.innerText = text;
+        d.id = 'drag-' + text.replace(/\s/g, '') + '-' + Math.random().toString(36).substr(2, 5);
+        d.ondragstart = (ev) => { ev.dataTransfer.setData("text", ev.target.id); speak(text); };
+        d.onclick = () => speak(text);
+        container.appendChild(d);
+        return d;
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+
+    function drop(ev) {
+        ev.preventDefault();
+        let data = ev.dataTransfer.getData("text");
+        let item = document.getElementById(data);
+        let target = ev.target;
+
+        if (!target.classList.contains('tt-slot') && !target.classList.contains('an-slot') && !target.classList.contains('be-slot') && !target.classList.contains('color-slot') && !target.classList.contains('phonics-slot') && !target.classList.contains('pronoun-slot')) {
+            target = target.closest('.tt-slot') || target.closest('.an-slot') || target.closest('.be-slot') || target.closest('.color-slot') || target.closest('.phonics-slot') || target.closest('.pronoun-slot');
+        }
+
+        if (target && item) {
+            if (target.children.length > 0) return; // Slot full
+
+            if (item.innerText === target.dataset.ans) {
+                target.appendChild(item);
+                target.classList.add('correct');
+                item.draggable = false; item.classList.add('locked');
+                playSound(true); speak("Correct!");
+            } else {
+                playSound(false);
+            }
+        }
+    }
+
+    function returnItem(ev) {
+        ev.preventDefault();
+        let data = ev.dataTransfer.getData("text");
+        let item = document.getElementById(data);
+        if (ev.target.classList.contains('source-box')) ev.target.appendChild(item);
+    }
+
+    // Start
+    initTalkTime();
+
+</script>
+
+</body>
+</html>

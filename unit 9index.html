@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Can 1 - Unit 9: Days and Weather</title>
+    <style>
+        /* ============ التنسيقات العامة ============ */
+        :root {
+            --main-color: #3498db; /* أزرق سماوي للطقس */
+            --accent-color: #2980b9;
+            --bg-color: #eef9fe;
+            --text-color: #2c3e50;
+            --success: #27ae60;
+            --error: #c0392b;
+            --slot-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            user-select: none;
+        }
+
+        .container { max-width: 950px; margin: 0 auto; }
+
+        /* الرأس */
+        .header {
+            background-color: var(--main-color); color: white;
+            padding: 25px; border-radius: 20px; margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 5px solid #1f618d;
+        }
+        .header h1 { margin: 0; font-size: 2.5em; }
+        
+        .nav-container {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px;
+        }
+        .btn-nav {
+            background: white; color: var(--main-color); border: 2px solid var(--main-color);
+            padding: 12px 25px; border-radius: 30px; cursor: pointer;
+            font-size: 1.1em; font-weight: bold; transition: 0.3s;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .btn-nav:hover, .btn-nav.active {
+            background: var(--main-color); color: white; transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        /* الأقسام */
+        .section { display: none; animation: slideIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--dark); border-bottom: 3px solid var(--accent-color); display: inline-block; padding-bottom: 5px; margin-bottom: 25px; }
+
+        /* ============ 1. Talk Time (Dialog) ============ */
+        .chat-container {
+            display: flex; flex-direction: column; gap: 20px; max-width: 600px; margin: 0 auto;
+        }
+        .chat-bubble {
+            background: white; padding: 15px 25px; border-radius: 20px;
+            position: relative; display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1); font-size: 1.2em;
+        }
+        .chat-left { align-self: flex-start; border-bottom-left-radius: 2px; background: #fff3e0; }
+        .chat-right { align-self: flex-end; flex-direction: row-reverse; border-bottom-right-radius: 2px; background: #d6eaf8; }
+        .character-icon { font-size: 2.5em; }
+
+        .slot-inline {
+            display: inline-flex; min-width: 120px; height: 45px;
+            background-color: white; border: 2px dashed #3498db; border-radius: 10px;
+            align-items: center; justify-content: center; margin: 0 5px;
+            transition: 0.3s; vertical-align: middle; font-size: 0.9em;
+        }
+        .slot-inline.correct { background-color: #d5f5e3; border-color: var(--success); border-style: solid; }
+
+        /* ============ 2. Rhythms (Days) ============ */
+        .days-container {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 800px; margin: 0 auto;
+        }
+        .day-card {
+            width: 130px; background: white; border-radius: 15px; padding: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center;
+            border: 1px solid #eee;
+        }
+        .day-num { font-size: 1.5em; font-weight: bold; color: #ccc; margin-bottom: 5px; }
+        .day-slot {
+            width: 100%; height: 40px; border: 2px dashed #ccc; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;
+        }
+        .day-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ 3. Words (Weather) ============ */
+        .weather-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .weather-card {
+            width: 150px; background: white; border-radius: 15px; padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center;
+        }
+        .weather-icon { font-size: 4em; margin-bottom: 10px; }
+        .weather-slot { 
+            width: 100%; height: 45px; border: 2px dashed #ccc; border-radius: 8px; 
+            background: #fafafa; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em; font-weight: bold;
+        }
+        .weather-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* ============ 4. Phonics (W-Z & Numbers) ============ */
+        .phonics-row { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 30px;}
+        .phonics-card {
+            width: 140px; background: white; padding: 15px; border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center; box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .phonics-icon { font-size: 3em; margin-bottom: 5px; }
+        .phonics-word { font-size: 1.2em; font-weight: bold; color: #555; letter-spacing: 1px; margin-bottom: 10px;}
+        .phonics-slot { width: 50px; height: 50px; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8em; font-weight: bold; }
+        .phonics-slot.correct { background: #d5f5e3; border-color: green; }
+
+        /* أرقام العشرات */
+        .tens-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .ten-box { 
+            width: 60px; height: 60px; background: #3498db; color: white; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;
+            box-shadow: 0 4px 0 #2980b9;
+        }
+        .ten-slot {
+             width: 60px; height: 60px; background: white; border: 2px dashed #ccc; border-radius: 10px;
+             display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;
+        }
+        .ten-slot.correct { border-color: green; background: #d5f5e3; }
+
+
+        /* ============ العناصر القابلة للسحب ============ */
+        .source-box {
+            background: white; padding: 20px; border-radius: 15px; min-height: 80px;
+            margin-top: 30px; border: 3px dashed #3498db;
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
+        }
+
+        .draggable {
+            padding: 10px 20px; background-color: var(--main-color); color: white;
+            border-radius: 25px; font-weight: bold; cursor: grab; font-size: 1.1em;
+            box-shadow: 0 4px 0 #2980b9; transition: 0.1s; z-index: 100;
+            pointer-events: auto !important;
+        }
+        .draggable:active { cursor: grabbing; transform: translateY(4px); box-shadow: none; }
+        .draggable.locked { cursor: default; background-color: var(--success); box-shadow: none; transform: none; }
+
+        /* ============ تحكم وأزرار ============ */
+        .controls { margin-top: 30px; }
+        .btn-reset {
+            background: var(--text-color); color: white; border: none; padding: 10px 30px;
+            border-radius: 10px; cursor: pointer; font-size: 1em;
+        }
+
+        /* مؤشر عدم التفاعل داخل السلوت */
+        .slot-inline *, .day-slot *, .weather-slot *, .phonics-slot *, .ten-slot * { pointer-events: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>We Can 1: Unit 9 (Days & Weather) ⛅</h1>
+        <p>Interactive Activities</p>
+    </div>
+
+    <div class="nav-container">
+        <button class="btn-nav active" onclick="showSection('talk-time')">🗣️ Talk Time</button>
+        <button class="btn-nav" onclick="showSection('rhythms')">📅 Days</button>
+        <button class="btn-nav" onclick="showSection('words')">🌦️ Weather</button>
+        <button class="btn-nav" onclick="showSection('phonics')">🔤 Phonics</button>
+    </div>
+
+    <div id="talk-time" class="section active">
+        <h2>Talk Time: What day do you like?</h2>
+        <p>Complete the conversation.</p>
+
+        <div class="chat-container">
+            <div class="chat-bubble chat-left">
+                <div class="character-icon">👦</div>
+                <div>What <div class="slot-inline" data-ans="day" ondrop="drop(event)" ondragover="allowDrop(event)"></div> do you like?</div>
+            </div>
+            <div class="chat-bubble chat-right">
+                <div class="character-icon">👧</div>
+                <div>I like <div class="slot-inline" data-ans="Friday" ondrop="drop(event)" ondragover="allowDrop(event)"></div>. How about you?</div>
+            </div>
+            <div class="chat-bubble chat-left">
+                <div class="character-icon">👦</div>
+                <div>I <div class="slot-inline" data-ans="like" ondrop="drop(event)" ondragover="allowDrop(event)"></div> Saturday.</div>
+            </div>
+        </div>
+
+        <div id="talk-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initTalkTime()">🔄 Reset</button></div>
+    </div>
+
+    <div id="rhythms" class="section">
+        <h2>Rhythms: Days of the Week Chant</h2>
+        <p>Order the days correctly (1-7).</p>
+
+        <div class="days-container" id="days-grid">
+            </div>
+
+        <div id="days-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initDays()">🔄 Reset</button></div>
+    </div>
+
+    <div id="words" class="section">
+        <h2>Words: What's the weather like?</h2>
+        <p>Drag the weather word to the picture.</p>
+        
+        <div class="weather-grid" id="weather-grid-area"></div>
+
+        <div id="weather-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initWeather()">🔄 Reset</button></div>
+    </div>
+
+    <div id="phonics" class="section">
+        <h2>Phonics: Letters & Numbers</h2>
+        
+        <h3>1. Complete the words (W-Z)</h3>
+        <div class="phonics-row" id="phonics-grid-area"></div>
+
+        <h3>2. Order the tens (10-100)</h3>
+        <div class="tens-grid" id="tens-grid-area"></div>
+
+        <div id="phonics-source" class="source-box" ondrop="returnItem(event)" ondragover="allowDrop(event)"></div>
+        <div class="controls"><button class="btn-reset" onclick="initPhonics()">🔄 Reset</button></div>
+    </div>
+
+</div>
+
+<script>
+    // ============ AUDIO SYSTEM ============
+    const synth = window.speechSynthesis;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function speak(text) {
+        if (synth.speaking) synth.cancel();
+        let u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; synth.speak(u);
+    }
+
+    function playSound(isCorrect) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if (isCorrect) {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    // ============ DATA ============
+    
+    // 1. Talk Time
+    const talkData = ["day", "Friday", "like"];
+
+    // 2. Days
+    const daysData = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    // 3. Weather
+    const weatherData = [
+        {w: "Sunny", i: "☀️"}, {w: "Cloudy", i: "☁️"}, 
+        {w: "Rainy", i: "🌧️"}, {w: "Snowy", i: "❄️"},
+        {w: "Windy", i: "🌬️"}
+    ];
+
+    // 4. Phonics (W-Z)
+    const phonicsData = [
+        {l:"W", w:"__OLF", i:"🐺"},
+        {l:"X", w:"FO__", i:"🦊"},
+        {l:"Y", w:"__ARD", i:"🏡"},
+        {l:"Z", w:"__EBRA", i:"🦓"}
+    ];
+
+    // Numbers (10-100)
+    const tensData = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+    // ============ INITIALIZATION ============
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        const btns = document.querySelectorAll('.btn-nav');
+        if(id === 'talk-time') { btns[0].classList.add('active'); initTalkTime(); }
+        if(id === 'rhythms') { btns[1].classList.add('active'); initDays(); }
+        if(id === 'words') { btns[2].classList.add('active'); initWeather(); }
+        if(id === 'phonics') { btns[3].classList.add('active'); initPhonics(); }
+    }
+
+    // --- Talk Time ---
+    function initTalkTime() {
+        const src = document.getElementById('talk-source'); src.innerHTML = '';
+        document.querySelectorAll('#talk-time .slot-inline').forEach(s => { s.innerHTML = ''; s.classList.remove('correct'); });
+        [...talkData].sort(() => Math.random() - 0.5).forEach(w => createDraggable(w, src));
+    }
+
+    // --- Days ---
+    function initDays() {
+        const grid = document.getElementById('days-grid');
+        const src = document.getElementById('days-source');
+        grid.innerHTML = ''; src.innerHTML = '';
+        
+        daysData.forEach((d, i) => {
+            grid.innerHTML += `
+            <div class="day-card">
+                <div class="day-num">${i+1}</div>
+                <div class="day-slot" data-ans="${d}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        let shuffled = [...daysData].sort(() => Math.random() - 0.5);
+        shuffled.forEach(d => createDraggable(d, src));
+    }
+
+    // --- Weather ---
+    function initWeather() {
+        const grid = document.getElementById('weather-grid-area');
+        const src = document.getElementById('weather-source');
+        grid.innerHTML = ''; src.innerHTML = '';
+
+        weatherData.forEach(t => {
+            grid.innerHTML += `
+            <div class="weather-card">
+                <div class="weather-icon">${t.i}</div>
+                <div class="weather-slot" data-ans="${t.w}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        let shuffled = [...weatherData].sort(() => Math.random() - 0.5);
+        shuffled.forEach(t => createDraggable(t.w, src));
+    }
+
+    // --- Phonics & Numbers ---
+    function initPhonics() {
+        const pGrid = document.getElementById('phonics-grid-area');
+        const nGrid = document.getElementById('tens-grid-area');
+        const src = document.getElementById('phonics-source');
+        pGrid.innerHTML = ''; nGrid.innerHTML = ''; src.innerHTML = '';
+
+        // Letters
+        phonicsData.forEach(item => {
+            pGrid.innerHTML += `
+            <div class="phonics-card">
+                <div class="phonics-icon">${item.i}</div>
+                <div class="phonics-word">${item.w}</div>
+                <div class="phonics-slot" data-ans="${item.l}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>`;
+        });
+
+        // Numbers
+        tensData.forEach(n => {
+            nGrid.innerHTML += `<div class="ten-slot" data-ans="${n}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>`;
+        });
+
+        // Create Draggables
+        let allItems = [...phonicsData.map(x=>x.l), ...tensData];
+        allItems.sort(() => Math.random() - 0.5).forEach(item => createDraggable(item.toString(), src));
+    }
+
+    // ============ CORE LOGIC ============
+    function createDraggable(text, container) {
+        let d = document.createElement('div');
+        d.className = 'draggable'; d.draggable = true; d.innerText = text;
+        d.id = 'drag-' + text.replace(/\s/g, '') + '-' + Math.random().toString(36).substr(2, 5);
+        d.ondragstart = (ev) => { ev.dataTransfer.setData("text", ev.target.id); speak(text); };
+        d.onclick = () => speak(text);
+        container.appendChild(d);
+        return d;
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+
+    function drop(ev) {
+        ev.preventDefault();
+        let data = ev.dataTransfer.getData("text");
+        let item = document.getElementById(data);
+        let target = ev.target;
+
+        if (!target.classList.contains('slot-inline') && !target.classList.contains('day-slot') && !target.classList.contains('weather-slot') && !target.classList.contains('phonics-slot') && !target.classList.contains('ten-slot')) {
+            target = target.closest('.slot-inline') || target.closest('.day-slot') || target.closest('.weather-slot') || target.closest('.phonics-slot') || target.closest('.ten-slot');
+        }
+
+        if (target && item) {
+            if (target.children.length > 0) return; 
+
+            if (item.innerText === target.dataset.ans) {
+                target.appendChild(item);
+                target.classList.add('correct');
+                item.draggable = false; item.classList.add('locked');
+                playSound(true); speak("Correct!");
+            } else {
+                playSound(false);
+            }
+        }
+    }
+
+    function returnItem(ev) {
+        ev.preventDefault();
+        let data = ev.dataTransfer.getData("text");
+        let item = document.getElementById(data);
+        if (ev.target.classList.contains('source-box')) ev.target.appendChild(item);
+    }
+
+    // Start
+    initTalkTime();
+
+</script>
+
+</body>
+</html>
